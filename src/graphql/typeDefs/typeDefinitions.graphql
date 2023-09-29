@@ -1,0 +1,43 @@
+type countries {
+  id: ID!
+  iso_name: String
+  name: String
+
+}
+
+type years{
+    id: ID!
+    code_name: String!
+    name: String!
+}    
+
+type estados {
+  id: ID!
+  name: String
+  raw: String
+  status_code_name: String
+  type: String
+  code_name: String
+  country_id: String
+}
+
+type municipios {
+  id: ID!
+  iso_name: String
+  name:String
+  estado_id: String
+}
+
+type servicios {
+  id:  ID!
+  name: String
+
+}
+
+type Query{
+    countries: [countries]!
+    years: [years]!
+    estados: [estados]!
+    municipios: [municipios]!
+    servicios: [servicios]!
+}

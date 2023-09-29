@@ -1,0 +1,1837 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model years {
+  id           String         @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name    String         @unique
+  name         String
+  total_region total_region[]
+
+  @@id([id, code_name])
+}
+
+model countries {
+  id       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  iso_name String
+  name     String
+  estados  estados[]
+  states   states[]
+}
+
+model estados {
+  id               String       @id @default(uuid()) @db.Uuid
+  name             String?
+  raw              Json[]
+  status_code_name String?
+  type             String?
+  code_name        String?
+  country_id       String?      @default(uuid()) @db.Uuid
+  countries        countries?   @relation(fields: [country_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "estados_countries")
+  municipios       municipios[]
+}
+
+model municipios {
+  id                 String               @id @default(uuid()) @db.Uuid
+  iso_name           String?
+  name               String?
+  estado_id          String?              @default(uuid()) @db.Uuid
+  mcpos_dt           mcpos_dt[]
+  estados            estados?             @relation(fields: [estado_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "municipios_estados")
+  region1_municipios region1_municipios?
+  region2_municipios region2_municipios[]
+  region3_municipios region3_municipios[]
+}
+
+model activities {
+  id               String          @unique(map: "activities_id_key1") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name        String          @unique(map: "activities_code_name_key1")
+  name             String
+  order            Int
+  status_code_name String?         @default("ACTIVE")
+  status           status?         @relation(fields: [status_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  subactivities    subactivities[]
+
+  @@id([id, code_name], map: "activities_pkey1")
+}
+
+model administrative_departments {
+  id        String     @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  code_name String     @unique
+  inbox     inbox[]
+  programs  programs[]
+  projects  projects[]
+  users     users[]
+
+  @@id([id, code_name])
+}
+
+model bc {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model bj {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model bs {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model cc {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model cities {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  iso_name          String              @unique
+  name              String
+  state_id          String              @default(dbgenerated("'652bec70-214f-47a6-b1c2-66a9f8aa526e'::uuid")) @db.Uuid
+  states            states              @relation(fields: [state_id], references: [id], onUpdate: Restrict)
+  financial_sources financial_sources[]
+}
+
+model co {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model colors {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String
+  hexadecimal String
+  priorities  priorities[]
+  status      status[]
+}
+
+model companies {
+  id               String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String
+  category_id      String           @db.Uuid
+  rfc              String
+  created_at       DateTime         @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime         @default(now()) @db.Timestamptz(6)
+  supplier_sectors supplier_sectors @relation(fields: [category_id], references: [id], onUpdate: Restrict)
+  suppliers        suppliers[]
+}
+
+model cs {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model data_indicators {
+  id                  String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title               String
+  static_value        String?
+  api_url             String?
+  external_data_url   String?
+  frequency_code_name String?
+  date                DateTime?    @db.Date
+  frequencies         frequencies? @relation(fields: [frequency_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+}
+
+model data_matrix {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  subactivity_id String        @db.Uuid
+  columns        Json
+  rows           Json
+  source         String?
+  unit           String?
+  frequency_id   String?       @db.Uuid
+  filters        Json?
+  row_filters    Json?
+  notes          Json?
+  subactivities  subactivities @relation(fields: [subactivity_id], references: [id], onUpdate: Restrict)
+}
+
+model days {
+  id        String @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name String @unique
+  name      String
+
+  @@id([id, code_name])
+}
+
+model derived_programs {
+  id        String @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name String @unique
+  name      String
+
+  @@id([id, code_name])
+}
+
+model division_regiones {
+  id                                      String               @id(map: "division_tarifaria_pkey") @db.Uuid
+  nombre                                  String?
+  descripcion                             String?
+  mcpos_dt_mcpos_dt_r1Todivision_regiones mcpos_dt[]           @relation("mcpos_dt_r1Todivision_regiones")
+  mcpos_dt_mcpos_dt_r2Todivision_regiones mcpos_dt[]           @relation("mcpos_dt_r2Todivision_regiones")
+  mcpos_dt_mcpos_dt_r3Todivision_regiones mcpos_dt[]           @relation("mcpos_dt_r3Todivision_regiones")
+  region1_municipios                      region1_municipios[]
+  region2_municipios                      region2_municipios[]
+  region3_municipios                      region3_municipios[]
+  total_region                            total_region[]
+}
+
+model document_logs {
+  id                                           String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  document_id                                  String?                    @db.Uuid
+  admin_unit_id                                String?                    @db.Uuid
+  remarks                                      String?
+  notification_date                            DateTime?                  @db.Date
+  expiration_date                              DateTime?                  @db.Date
+  people_id                                    String?                    @db.Uuid
+  issued_date                                  DateTime                   @default(now()) @db.Date
+  amount                                       String?
+  document_code_name                           String
+  file_id                                      String?                    @db.Uuid
+  status_code_name                             String
+  meta_data                                    Json?
+  validated_by_id                              String?                    @db.Uuid
+  created_at                                   DateTime                   @default(now()) @db.Timestamp(6)
+  updated_at                                   DateTime                   @default(now()) @db.Timestamp(6)
+  financial_source_id                          String?                    @db.Uuid
+  supplier_id                                  String?                    @db.Uuid
+  state_energy_vinculation_id                  String?                    @db.Uuid
+  project_development_id                       String?                    @db.Uuid
+  newsletters_id                               String?                    @db.Uuid
+  task_id                                      String?                    @db.Uuid
+  inbox_id                                     String?                    @db.Uuid
+  ordinary_session_id                          String?                    @db.Uuid
+  drive_file                                   Boolean?                   @default(false)
+  documents                                    documents                  @relation(fields: [document_code_name], references: [code_name], onUpdate: Restrict)
+  files                                        files?                     @relation(fields: [file_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  financial_sources                            financial_sources?         @relation(fields: [financial_source_id], references: [id], onDelete: Cascade)
+  inbox                                        inbox?                     @relation(fields: [inbox_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  newsletters                                  newsletters?               @relation(fields: [newsletters_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  ordinaries_sessions                          ordinaries_sessions?       @relation(fields: [ordinary_session_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  people_document_logs_people_idTopeople       people?                    @relation("document_logs_people_idTopeople", fields: [people_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  project_developments                         project_developments?      @relation(fields: [project_development_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  state_energy_vinculations                    state_energy_vinculations? @relation(fields: [state_energy_vinculation_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  status                                       status                     @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+  suppliers                                    suppliers?                 @relation(fields: [supplier_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  projects_main_tasks                          projects_main_tasks?       @relation(fields: [task_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  people_document_logs_validated_by_idTopeople people?                    @relation("document_logs_validated_by_idTopeople", fields: [validated_by_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+}
+
+model document_types {
+  id         String      @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name  String      @unique
+  name       String
+  deleted_at DateTime?   @db.Timestamp(6)
+  documents  documents[]
+
+  @@id([id, code_name])
+}
+
+model documents {
+  id                      String          @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                    String
+  code_name               String          @unique
+  status_code_name        String
+  document_type_code_name String?
+  require_signature       Boolean         @default(false)
+  description             String?
+  required                Boolean         @default(false)
+  renew_every             Int?
+  frequency_code_name     String?
+  files_limit             Int             @default(0)
+  expires                 Boolean
+  created_at              DateTime        @default(now()) @db.Timestamp(6)
+  updated_at              DateTime        @default(now()) @db.Timestamp(6)
+  document_logs           document_logs[]
+  document_types          document_types? @relation(fields: [document_type_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  frequencies             frequencies?    @relation(fields: [frequency_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  status                  status          @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+
+  @@id([id, code_name])
+}
+
+model energy_activities {
+  id                   String                 @unique(map: "activities_id_key") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name            String                 @unique(map: "activities_code_name_key")
+  name                 String
+  energy_subactivities energy_subactivities[]
+  legal_frameworks     legal_frameworks[]
+
+  @@id([id, code_name], map: "activities_pkey")
+}
+
+model energy_subactivities {
+  id                        String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name                 String             @unique
+  name                      String
+  energy_activity_code_name String?
+  energy_activities         energy_activities? @relation(fields: [energy_activity_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  legal_frameworks          legal_frameworks[]
+
+  @@id([id, code_name])
+}
+
+model entities {
+  id                                                           String                   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name                                                    String                   @unique
+  name                                                         String
+  legal_frameworks_legal_frameworks_entity_code_nameToentities legal_frameworks[]       @relation("legal_frameworks_entity_code_nameToentities")
+  legal_frameworks_legal_frameworks_entity_idToentities        legal_frameworks[]       @relation("legal_frameworks_entity_idToentities")
+  task_metric_indicators                                       task_metric_indicators[]
+
+  @@id([id, code_name])
+}
+
+model file_details {
+  id                  String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  file_location       String?
+  description         String?
+  file_id             String      @db.Uuid
+  file_type_code_name String?
+  mime_type           String?
+  url                 String?
+  name                String?
+  warning             String?
+  created_at          DateTime    @default(now()) @db.Timestamp(6)
+  updated_at          DateTime    @default(now()) @db.Timestamp(6)
+  drive               Boolean     @default(false)
+  files               files       @relation(fields: [file_id], references: [id], onUpdate: Restrict)
+  file_types          file_types? @relation(fields: [file_type_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+}
+
+model file_types {
+  id           String         @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name    String         @unique
+  name         String
+  file_details file_details[]
+
+  @@id([id, code_name])
+}
+
+model files {
+  id            String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  created_at    DateTime        @default(now()) @db.Timestamp(6)
+  updated_at    DateTime        @default(now()) @db.Timestamp(6)
+  document_logs document_logs[]
+  file_details  file_details[]
+  inbox         inbox[]
+}
+
+model financial_source_sectors {
+  id                  String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  financial_source_id String            @db.Uuid
+  sector_code_name    String
+  financial_sources   financial_sources @relation(fields: [financial_source_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+  sectors             sectors           @relation(fields: [sector_code_name], references: [code_name], onDelete: Cascade)
+}
+
+model financial_sources {
+  id                       String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                     String
+  description              String?
+  email                    String
+  phone_number             String
+  company                  String?
+  sector_code_name         String?
+  city_id                  String?                    @db.Uuid
+  financial_type           String?
+  amount                   Decimal?                   @db.Decimal
+  created_at               DateTime                   @default(now()) @db.Timestamp(6)
+  state_id                 String?                    @db.Uuid
+  subsector                String?
+  latitude                 Decimal?                   @db.Decimal
+  longitude                Decimal?                   @db.Decimal
+  web_url                  String?
+  facebook                 String?
+  twitter                  String?
+  instagram                String?
+  status_code_name         String?                    @default("EN_REVISION")
+  rfc                      String?
+  contact                  String?
+  is_in_puebla             Boolean?
+  is_gender_equal          Boolean?
+  created_by_id            String?                    @db.Uuid
+  remarks                  String?
+  project_status           String?
+  programa_o_fondo         String?
+  document_logs            document_logs[]
+  financial_source_sectors financial_source_sectors[]
+  cities                   cities?                    @relation(fields: [city_id], references: [id], onUpdate: SetNull)
+  sectors                  sectors?                   @relation(fields: [sector_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  states                   states?                    @relation(fields: [state_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  status                   status?                    @relation(fields: [status_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+}
+
+model folios {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  folio3         String?
+  prefix         String
+  service_type   String
+  folio          Int?
+  year           Int?
+  agency         String?    @default("AEEP")
+  differentiator String?
+  inbox          inbox[]
+  projects       projects[]
+}
+
+model frequencies {
+  id                     String                   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name              String                   @unique
+  name                   String
+  data_indicators        data_indicators[]
+  documents              documents[]
+  subactivities          subactivities[]
+  task_metric_indicators task_metric_indicators[]
+
+  @@id([id, code_name])
+}
+
+model gc {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model gn {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model inbox {
+  id                                   String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  folio_id                             String?                     @db.Uuid
+  status_code_name                     String
+  priority_code_name                   String?
+  administrative_department_code_name  String?
+  request_date                         DateTime?                   @db.Date
+  assigned_to_id                       String?                     @db.Uuid
+  requested_by_id                      String?                     @db.Uuid
+  file_id                              String?                     @db.Uuid
+  created_at                           DateTime                    @default(now()) @db.Timestamp(6)
+  created_by_id                        String?                     @db.Uuid
+  updated_at                           DateTime                    @default(now()) @db.Timestamp(6)
+  updated_by                           String?                     @db.Uuid
+  inbox_type_code_name                 String?
+  category_id                          String?                     @db.Uuid
+  subject                              String
+  created_by                           String?
+  body                                 String?
+  topic_id                             String?                     @db.Uuid
+  requested_by_name                    String?
+  requested_by_company                 String?
+  addressee_id                         String?                     @db.Uuid
+  notification                         Boolean                     @default(true)
+  file_received                        String?
+  file_received_mimetype               String?
+  file_confirmation                    String?
+  file_confirmation_mimetype           String?
+  folio_completo                       String?
+  acuse_recibido                       Boolean                     @default(false)
+  related_folio                        String?
+  cancelation_reason                   String?
+  external_dependency                  String?
+  document_logs                        document_logs[]
+  people_inbox_addressee_idTopeople    people?                     @relation("inbox_addressee_idTopeople", fields: [addressee_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  administrative_departments           administrative_departments? @relation(fields: [administrative_department_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  people_inbox_assigned_to_idTopeople  people?                     @relation("inbox_assigned_to_idTopeople", fields: [assigned_to_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  roles                                roles?                      @relation(fields: [category_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  files                                files?                      @relation(fields: [file_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  folios                               folios?                     @relation(fields: [folio_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  inbox_types                          inbox_types?                @relation(fields: [inbox_type_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  priorities                           priorities?                 @relation(fields: [priority_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  people_inbox_requested_by_idTopeople people?                     @relation("inbox_requested_by_idTopeople", fields: [requested_by_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  status                               status                      @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+  inbox_cpp                            inbox_cpp[]
+  inbox_tags                           inbox_tags[]
+}
+
+model inbox_cpp {
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  adressee_id String @db.Uuid
+  inbox_id    String @db.Uuid
+  people      people @relation(fields: [adressee_id], references: [id], onUpdate: Restrict)
+  inbox       inbox  @relation(fields: [inbox_id], references: [id], onUpdate: Restrict)
+}
+
+model inbox_tags {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  inbox_id String @db.Uuid
+  tag      String
+  inbox    inbox  @relation(fields: [inbox_id], references: [id], onUpdate: Restrict)
+}
+
+model inbox_types {
+  id        String  @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  code_name String  @unique
+  inbox     inbox[]
+
+  @@id([id, code_name])
+}
+
+model indicators {
+  id                   String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  mir_level            String
+  indicator_id         String
+  direction            String
+  indicator_name       String
+  annual_goal          String
+  status_code_name     String
+  observations         String?
+  created_at           DateTime?              @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime?              @default(now()) @db.Timestamptz(6)
+  status               status                 @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+  indicators_trimester indicators_trimester[]
+}
+
+model indicators_semesters {
+  id                    String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  semester              String                 @unique
+  first_trimester_name  String
+  second_trimester_name String
+  indicators_trimester  indicators_trimester[]
+}
+
+model indicators_trimester {
+  id                                                                         String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  semester_id                                                                String               @db.Uuid
+  first_trimester_responsable                                                String?              @db.Uuid
+  first_trimester_date_update                                                DateTime?            @db.Date
+  first_trimester_percentage                                                 String?
+  second_trimester_responsable                                               String?              @db.Uuid
+  second_trimester_date_update                                               DateTime?            @db.Date
+  second_trimester_percentage                                                String?
+  indicator_id                                                               String               @db.Uuid
+  user_people_indicators_trimester_first_trimester_responsableTouser_people  user_people?         @relation("indicators_trimester_first_trimester_responsableTouser_people", fields: [first_trimester_responsable], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  indicators                                                                 indicators           @relation(fields: [indicator_id], references: [id], onUpdate: Restrict)
+  user_people_indicators_trimester_second_trimester_responsableTouser_people user_people?         @relation("indicators_trimester_second_trimester_responsableTouser_people", fields: [second_trimester_responsable], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  indicators_semesters                                                       indicators_semesters @relation(fields: [semester_id], references: [id], onUpdate: Restrict)
+}
+
+model institutions {
+  id                     String                   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name              String                   @unique
+  name                   String
+  task_metric_indicators task_metric_indicators[]
+
+  @@id([id, code_name])
+}
+
+model jal {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model legal_frameworks {
+  id                                                   String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                                                 String
+  status_code_name                                     String                @default("ACTIVOO")
+  legal_type_code_name                                 String
+  energy_activity_code_name                            String?
+  energy_subactivity_code_name                         String?
+  entity_code_name                                     String?
+  url                                                  String
+  publish_site                                         String
+  publish_date                                         DateTime              @default(now()) @db.Date
+  created_at                                           DateTime              @default(now()) @db.Timestamp(6)
+  created_by_id                                        String?               @db.Uuid
+  updated_at                                           DateTime              @default(now()) @db.Timestamp(6)
+  updated_by_id                                        String?               @db.Uuid
+  modify                                               String?
+  order                                                String?
+  activity                                             String?
+  subactivity                                          String?
+  entity_id                                            String?               @db.Uuid
+  level_id                                             String?               @default(dbgenerated("'b17b3e33-a0d2-4350-8919-798c0bcdee2b'::uuid")) @db.Uuid
+  entity_text                                          String?
+  energy_activities                                    energy_activities?    @relation(fields: [energy_activity_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  energy_subactivities                                 energy_subactivities? @relation(fields: [energy_subactivity_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  entities_legal_frameworks_entity_code_nameToentities entities?             @relation("legal_frameworks_entity_code_nameToentities", fields: [entity_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  entities_legal_frameworks_entity_idToentities        entities?             @relation("legal_frameworks_entity_idToentities", fields: [entity_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  legal_types                                          legal_types           @relation(fields: [legal_type_code_name], references: [code_name], onUpdate: Restrict)
+  levels                                               levels?               @relation(fields: [level_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  status                                               status                @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+}
+
+model legal_types {
+  id               String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String
+  code_name        String             @unique
+  legal_frameworks legal_frameworks[]
+
+  @@id([id, code_name])
+}
+
+model levels {
+  id               String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name        String             @unique
+  name             String
+  legal_frameworks legal_frameworks[]
+
+  @@id([id, code_name])
+}
+
+model map_categories {
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  code_name String
+}
+
+model map_categories_data {
+  id                 String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  map_data_code_name String
+  subsection_id      String?    @db.Uuid
+  name               String?
+  geojson            Json?
+  map_data           map_data[]
+}
+
+model map_data {
+  id                  String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                String?
+  code_name           String?
+  geojson             String?
+  id_map_cd           String?              @db.Uuid
+  map_categories_data map_categories_data? @relation(fields: [id_map_cd], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model map_sections {
+  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name               String
+  code_name          String
+  category_code_name String?
+  map_subsections    map_subsections[]
+}
+
+model map_subsections {
+  id                String        @id(map: "map_subcategories_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name         String
+  section_code_name String
+  name              String?
+  id_section        String?       @db.Uuid
+  map_sections      map_sections? @relation(fields: [id_section], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model mc {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model mcpos_dt {
+  id                                               String             @id @db.Uuid
+  id_municipios                                    String?            @db.Uuid
+  r1                                               String?            @db.Uuid
+  r2                                               String?            @db.Uuid
+  r3                                               String?            @db.Uuid
+  municipios                                       municipios?        @relation(fields: [id_municipios], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  division_regiones_mcpos_dt_r1Todivision_regiones division_regiones? @relation("mcpos_dt_r1Todivision_regiones", fields: [r1], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  division_regiones_mcpos_dt_r2Todivision_regiones division_regiones? @relation("mcpos_dt_r2Todivision_regiones", fields: [r2], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  division_regiones_mcpos_dt_r3Todivision_regiones division_regiones? @relation("mcpos_dt_r3Todivision_regiones", fields: [r3], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model mn {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model modules {
+  id               String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name        String             @unique
+  name             String
+  status_code_name String
+  created_at       DateTime           @default(now()) @db.Timestamp(6)
+  updated_at       DateTime           @default(now()) @db.Timestamp(6)
+  status           status             @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+  reports          reports[]
+  role_permissions role_permissions[]
+
+  @@id([id, code_name])
+}
+
+model months {
+  id           String         @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name    String         @unique
+  name         String
+  order        Int
+  total_region total_region[]
+
+  @@id([id, code_name])
+}
+
+model ms {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model newsletter_types {
+  id          String        @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name   String        @unique
+  name        String
+  newsletters newsletters[]
+
+  @@id([id, code_name])
+}
+
+model newsletters {
+  id                        String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title                     String?
+  author_id                 String?           @db.Uuid
+  status_code_name          String
+  publish_date              DateTime?         @db.Date
+  created_at                DateTime          @default(now()) @db.Timestamp(6)
+  created_by_id             String?           @db.Uuid
+  updated_at                DateTime          @default(now()) @db.Timestamp(6)
+  updated_by_id             String?           @db.Uuid
+  description               String?
+  newsletter_type_code_name String?
+  document_logs             document_logs[]
+  people                    people?           @relation(fields: [author_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  newsletter_types          newsletter_types? @relation(fields: [newsletter_type_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  status                    status            @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+}
+
+model no {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model nr {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model or {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model ordinaries_sessions {
+  id                                                              String                             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  topic                                                           String
+  session_date                                                    DateTime                           @db.Date
+  created_at                                                      DateTime                           @default(now()) @db.Timestamptz(6)
+  updated_at                                                      DateTime                           @default(now()) @db.Timestamptz(6)
+  url_google_forms                                                String?
+  check_user_id                                                   String?                            @db.Uuid
+  review_user_id                                                  String?                            @db.Uuid
+  googleforms_date                                                DateTime?                          @db.Date
+  check_date                                                      DateTime?                          @db.Date
+  review_date                                                     DateTime?                          @db.Date
+  status_code_name                                                String?
+  check_date_status_code_name                                     String?
+  review_date_status_code_name                                    String?
+  quorum                                                          Boolean?
+  session_number                                                  String?
+  location                                                        String?
+  document_logs                                                   document_logs[]
+  status_ordinaries_sessions_check_date_status_code_nameTostatus  status?                            @relation("ordinaries_sessions_check_date_status_code_nameTostatus", fields: [check_date_status_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  user_people_ordinaries_sessions_check_user_idTouser_people      user_people?                       @relation("ordinaries_sessions_check_user_idTouser_people", fields: [check_user_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  status_ordinaries_sessions_review_date_status_code_nameTostatus status?                            @relation("ordinaries_sessions_review_date_status_code_nameTostatus", fields: [review_date_status_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  user_people_ordinaries_sessions_review_user_idTouser_people     user_people?                       @relation("ordinaries_sessions_review_user_idTouser_people", fields: [review_user_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  status_ordinaries_sessions_status_code_nameTostatus             status?                            @relation("ordinaries_sessions_status_code_nameTostatus", fields: [status_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  ordinaries_sessions_participants                                ordinaries_sessions_participants[]
+}
+
+model ordinaries_sessions_participants {
+  id                  String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  session_id          String              @db.Uuid
+  participant_id      String?             @db.Uuid
+  name_person         String?
+  type                String?             @default("PARTICIPANTES")
+  user_people         user_people?        @relation(fields: [participant_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  ordinaries_sessions ordinaries_sessions @relation(fields: [session_id], references: [id], onUpdate: Restrict)
+}
+
+model ordinary_session_people {
+  id                  String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  people_id           String?           @db.Uuid
+  ordinary_session_id String            @db.Uuid
+  name_person         String?
+  ordinary_sessions   ordinary_sessions @relation(fields: [ordinary_session_id], references: [id], onUpdate: Restrict)
+  people              people?           @relation(fields: [people_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+}
+
+model ordinary_sessions {
+  id                      String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  subject                 String?
+  status_code_name        String
+  date                    DateTime?                 @db.Date
+  ordinary_session_people ordinary_session_people[]
+  status                  status                    @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+}
+
+model pages {
+  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title        String
+  body         String
+  url          String  @unique
+  button_label String?
+  button_url   String?
+}
+
+model pe {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model people {
+  id                                                  String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  first_name                                          String
+  middle_name                                         String?
+  last_name                                           String
+  second_last_name                                    String?
+  phone_number                                        String?
+  enabled_notifications                               Boolean                   @default(true)
+  people_type_code_name                               String?
+  status_code_name                                    String
+  user_people_id                                      String?                   @db.Uuid
+  admin_unit_id                                       String?                   @db.Uuid
+  birth_date                                          DateTime?                 @db.Date
+  social_security_number                              String?
+  hiring_since                                        DateTime?                 @db.Date
+  termination_date                                    DateTime?                 @db.Date
+  rehirable                                           Boolean?
+  warning_notice                                      String?
+  folio                                               String?
+  nationality_id                                      String?                   @db.Uuid
+  gender_id                                           String?                   @db.Uuid
+  email                                               String?
+  address                                             String?
+  created_at                                          DateTime                  @default(now()) @db.Timestamp(6)
+  updated_at                                          DateTime                  @default(now()) @db.Timestamp(6)
+  document_logs_document_logs_people_idTopeople       document_logs[]           @relation("document_logs_people_idTopeople")
+  document_logs_document_logs_validated_by_idTopeople document_logs[]           @relation("document_logs_validated_by_idTopeople")
+  inbox_inbox_addressee_idTopeople                    inbox[]                   @relation("inbox_addressee_idTopeople")
+  inbox_inbox_assigned_to_idTopeople                  inbox[]                   @relation("inbox_assigned_to_idTopeople")
+  inbox_inbox_requested_by_idTopeople                 inbox[]                   @relation("inbox_requested_by_idTopeople")
+  inbox_cpp                                           inbox_cpp[]
+  newsletters                                         newsletters[]
+  ordinary_session_people                             ordinary_session_people[]
+  people_types                                        people_types?             @relation(fields: [people_type_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  status                                              status                    @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+  tasks                                               tasks[]
+  user_people                                         user_people[]
+}
+
+model people_types {
+  id               String    @id(map: "people_type_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String
+  code_name        String    @unique
+  status_code_name String
+  created_at       DateTime  @default(now()) @db.Timestamp(6)
+  updated_at       DateTime  @default(now()) @db.Timestamp(6)
+  deleted_at       DateTime? @db.Timestamp(6)
+  people           people[]
+  status           status    @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict, map: "people_type_status_code_name_fkey")
+}
+
+model priorities {
+  id            String          @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name          String
+  code_name     String          @unique
+  color_id      String?         @db.Uuid
+  inbox         inbox[]
+  colors        colors?         @relation(fields: [color_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  projects      projects[]
+  projects_main projects_main[]
+  tasks         tasks[]
+
+  @@id([id, code_name])
+}
+
+model programs {
+  id                         String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  govermments_areas_id       String                     @db.Uuid
+  thematic                   String
+  programs_status_code       String
+  programs_type_id           String                     @db.Uuid
+  date_start                 DateTime                   @db.Date
+  date_inprogress            DateTime?                  @db.Date
+  date_finished              DateTime?                  @db.Date
+  created_at                 DateTime?                  @default(now()) @db.Timestamptz(6)
+  administrative_departments administrative_departments @relation(fields: [govermments_areas_id], references: [id], onUpdate: Restrict)
+  status                     status                     @relation(fields: [programs_status_code], references: [code_name], onUpdate: Restrict)
+  programs_type              programs_type              @relation(fields: [programs_type_id], references: [id], onUpdate: Restrict)
+  programs_objectives        programs_objectives[]
+  task_metric_indicators     task_metric_indicators[]
+}
+
+model programs_lines_action {
+  id                                                           String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                                                         String
+  description                                                  String
+  registered_by                                                String                  @db.Uuid
+  assigned_to                                                  String?                 @db.Uuid
+  status_code                                                  String
+  date_start                                                   DateTime?               @db.Date
+  date_planning                                                DateTime?               @db.Date
+  date_inprogress                                              DateTime?               @db.Date
+  date_finished                                                DateTime?               @db.Date
+  programs_strategy_id                                         String                  @db.Uuid
+  exercise                                                     String
+  created_at                                                   DateTime?               @default(now()) @db.Timestamptz(6)
+  task_metric_indicator_id                                     String?                 @db.Uuid
+  user_people_programs_lines_action_assigned_toTouser_people   user_people?            @relation("programs_lines_action_assigned_toTouser_people", fields: [assigned_to], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  programs_strategy                                            programs_strategy       @relation(fields: [programs_strategy_id], references: [id], onUpdate: Restrict)
+  user_people_programs_lines_action_registered_byTouser_people user_people             @relation("programs_lines_action_registered_byTouser_people", fields: [registered_by], references: [id], onUpdate: Restrict)
+  status                                                       status                  @relation(fields: [status_code], references: [code_name], onUpdate: Restrict)
+  task_metric_indicators                                       task_metric_indicators? @relation(fields: [task_metric_indicator_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+}
+
+model programs_objectives {
+  id                     String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  programs_id            String              @db.Uuid
+  name                   String
+  objectives_status_code String
+  date_start             DateTime?           @db.Date
+  date_planning          DateTime?           @db.Date
+  date_inprogress        DateTime?           @db.Date
+  date_finished          DateTime?           @db.Date
+  created_at             DateTime?           @default(now()) @db.Timestamptz(6)
+  status                 status              @relation(fields: [objectives_status_code], references: [code_name], onUpdate: Restrict)
+  programs               programs            @relation(fields: [programs_id], references: [id], onUpdate: Restrict)
+  programs_strategy      programs_strategy[]
+}
+
+model programs_strategy {
+  id                                                       String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                                                     String
+  registered_by                                            String                  @db.Uuid
+  assigned_to                                              String?                 @db.Uuid
+  status_code                                              String
+  programs_objectives_id                                   String                  @db.Uuid
+  date_start                                               DateTime                @db.Date
+  date_planning                                            DateTime?               @db.Date
+  date_inprogress                                          DateTime?               @db.Date
+  date_finished                                            DateTime?               @db.Date
+  created_at                                               DateTime?               @default(now()) @db.Timestamptz(6)
+  programs_lines_action                                    programs_lines_action[]
+  user_people_programs_strategy_assigned_toTouser_people   user_people?            @relation("programs_strategy_assigned_toTouser_people", fields: [assigned_to], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  programs_objectives                                      programs_objectives     @relation(fields: [programs_objectives_id], references: [id], onUpdate: Restrict)
+  user_people_programs_strategy_registered_byTouser_people user_people             @relation("programs_strategy_registered_byTouser_people", fields: [registered_by], references: [id], onUpdate: Restrict)
+  status                                                   status                  @relation(fields: [status_code], references: [code_name], onUpdate: Restrict)
+}
+
+model programs_type {
+  id       String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name     String
+  programs programs[]
+}
+
+model project_developments {
+  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String
+  email            String
+  phone_number     String
+  rfc              String
+  category         String
+  modality         String
+  business_name    String
+  contact_name     String
+  status_code_name String          @default("ACTIVE")
+  created_by_id    String?         @db.Uuid
+  remarks          String?
+  created_at       DateTime?       @default(now()) @db.Timestamp(6)
+  document_logs    document_logs[]
+  status           status          @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+}
+
+model project_workflows {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  code_name  String
+  project_id String   @db.Uuid
+  order      Int
+  projects   projects @relation(fields: [project_id], references: [id], onUpdate: Restrict)
+  tasks      tasks[]
+
+  @@unique([code_name, project_id])
+}
+
+model projects {
+  id                                  String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                                String
+  folio_id                            String                     @db.Uuid
+  status_code_name                    String
+  administrative_department_code_name String
+  start_date                          DateTime                   @db.Date
+  priority_code_name                  String?
+  created_at                          DateTime                   @default(now()) @db.Timestamp(6)
+  created_by                          String?                    @db.Uuid
+  updated_at                          DateTime                   @default(now()) @db.Timestamp(6)
+  updated_by                          String?                    @db.Uuid
+  project_workflows                   project_workflows[]
+  administrative_departments          administrative_departments @relation(fields: [administrative_department_code_name], references: [code_name], onUpdate: Restrict)
+  folios                              folios                     @relation(fields: [folio_id], references: [id], onUpdate: Restrict)
+  priorities                          priorities?                @relation(fields: [priority_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  status                              status                     @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+  tasks                               tasks[]
+}
+
+model projects_main {
+  id                        String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  project_id                String
+  status_code_name          String
+  name                      String
+  description               String
+  start_date                DateTime                    @default(now()) @db.Date
+  priority_code_name        String
+  created_at                DateTime                    @default(now()) @db.Timestamptz(6)
+  updated_at                DateTime?                   @default(now()) @db.Timestamptz(6)
+  registered_by             String                      @db.Uuid
+  end_date                  DateTime?                   @db.Date
+  program_strategy_id       String?                     @db.Uuid
+  priorities                priorities                  @relation(fields: [priority_code_name], references: [code_name], onUpdate: Restrict)
+  user_people               user_people                 @relation(fields: [registered_by], references: [id], onUpdate: Restrict)
+  status                    status                      @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+  projects_main_responsable projects_main_responsable[]
+}
+
+model projects_main_responsable {
+  id                       String                     @id(map: "project_main_responsable_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  projects_id              String                     @db.Uuid
+  responsable_id           String                     @db.Uuid
+  created_at               DateTime                   @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime                   @default(now()) @db.Timestamptz(6)
+  revisador                Boolean?                   @default(false)
+  projects_main            projects_main              @relation(fields: [projects_id], references: [id], onUpdate: Restrict, map: "project_main_responsable_projects_id_fkey")
+  user_people              user_people                @relation(fields: [responsable_id], references: [id], onUpdate: Restrict)
+  projects_main_tasks      projects_main_tasks[]
+  projects_main_tasks_chat projects_main_tasks_chat[]
+}
+
+model projects_main_tasks {
+  id                        String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                      String
+  responsable_id            String                     @db.Uuid
+  date_created              DateTime                   @default(now()) @db.Date
+  date_finished             DateTime                   @db.Date
+  updated_at                DateTime?                  @default(now()) @db.Timestamptz(6)
+  status_code_name          String
+  project_id                String                     @db.Uuid
+  priority_code_name        String
+  registered_by_id          String                     @db.Uuid
+  registered_at             DateTime                   @db.Timestamp(6)
+  program_lines_action_id   String?                    @db.Uuid
+  created_at                DateTime?                  @default(now()) @db.Timestamptz(6)
+  indicator_id              String?                    @db.Uuid
+  point                     Int?
+  document_logs             document_logs[]
+  projects_main_responsable projects_main_responsable  @relation(fields: [responsable_id], references: [id], onUpdate: Restrict)
+  status                    status                     @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+  projects_main_tasks_chat  projects_main_tasks_chat[]
+}
+
+model projects_main_tasks_chat {
+  id                        String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  task_id                   String                     @db.Uuid
+  autor_id                  String?                    @db.Uuid
+  message                   String
+  created_at                DateTime                   @default(now()) @db.Timestamptz(6)
+  updated_at                DateTime?                  @default(now()) @db.Timestamptz(6)
+  registered_by_id          String                     @db.Uuid
+  projects_main_responsable projects_main_responsable? @relation(fields: [autor_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  projects_main_tasks       projects_main_tasks        @relation(fields: [task_id], references: [id], onUpdate: Restrict)
+}
+
+model region1_municipios {
+  id                   String             @db.Uuid
+  id_municipio         String             @id(map: "regiones_municipios_pkey") @db.Uuid
+  id_division_regiones String?            @db.Uuid
+  division_regiones    division_regiones? @relation(fields: [id_division_regiones], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "regiones_municipios_id_division_regiones_fkey")
+  municipios           municipios         @relation(fields: [id_municipio], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "regiones_municipios_id_municipio_fkey")
+}
+
+model region2_municipios {
+  id                   String             @id @db.Uuid
+  id_municipio         String?            @db.Uuid
+  id_division_regiones String?            @db.Uuid
+  division_regiones    division_regiones? @relation(fields: [id_division_regiones], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  municipios           municipios?        @relation(fields: [id_municipio], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model region3_municipios {
+  id                   String             @id @db.Uuid
+  id_municipio         String?            @db.Uuid
+  id_division_regiones String?            @db.Uuid
+  division_regiones    division_regiones? @relation(fields: [id_division_regiones], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  municipios           municipios?        @relation(fields: [id_municipio], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model regions {
+  id       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name     String
+  iso_name Decimal? @db.Decimal
+}
+
+model reports {
+  id                String              @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name              String
+  code_name         String              @unique
+  description       String?
+  module_id         String?             @db.Uuid
+  scheduled         Boolean             @default(false)
+  status_code_name  String
+  form              Json
+  columns           Json
+  selected_fields   Json
+  table             String
+  created_at        DateTime            @default(now()) @db.Timestamp(6)
+  type              String              @default("gql")
+  report            Boolean             @default(true)
+  modules           modules?            @relation(fields: [module_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  status            status              @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+  scheduled_reports scheduled_reports[]
+
+  @@id([id, code_name])
+}
+
+model rfc_types {
+  id        String      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name String      @unique
+  name      String
+  suppliers suppliers[]
+
+  @@id([id, code_name])
+}
+
+model role_permissions {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role_id          String   @db.Uuid
+  status_code_name String
+  module_id        String?  @db.Uuid
+  select           Boolean
+  insert           Boolean
+  update           Boolean
+  drop             Boolean
+  created_at       DateTime @default(now()) @db.Timestamp(6)
+  updated_at       DateTime @db.Timestamp(6)
+  modules          modules? @relation(fields: [module_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  roles            roles    @relation(fields: [role_id], references: [id], onUpdate: Restrict)
+  status           status   @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+}
+
+model roles {
+  id               String             @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String
+  description      String?
+  status_code_name String
+  code_name        String             @unique
+  created_at       DateTime           @default(now()) @db.Timestamp(6)
+  updated_at       DateTime           @default(now()) @db.Timestamp(6)
+  rol              String?
+  inbox            inbox[]
+  role_permissions role_permissions[]
+  status           status             @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+  users            users[]
+
+  @@id([id, code_name])
+}
+
+model scheduled_reports {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  report_id           String   @db.Uuid
+  subject             String
+  message             String?
+  frequency_code_name String
+  values              Json?
+  times               Json
+  emails              Json
+  weekdays            Json?
+  days                Json?
+  status_code_name    String
+  columns             Json?
+  created_at          DateTime @default(now()) @db.Timestamp(6)
+  created_by          String?  @db.Uuid
+  updated_at          DateTime @default(now()) @db.Timestamp(6)
+  updated_by          String?  @db.Uuid
+  reports             reports  @relation(fields: [report_id], references: [id], onUpdate: Restrict)
+  status              status   @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+}
+
+model se {
+  id           String  @id @db.Uuid
+  anio         String?
+  mes          String?
+  idmes        String?
+  tarifa1      String?
+  tarifa2      String?
+  descripcion  String?
+  inthorario   String?
+  cargo        String?
+  unidades     String?
+  transmision  String?
+  distribucion String?
+  cenace       String?
+  suministro   String?
+  scnmem       String?
+  generacion   String?
+  capacidad    String?
+  total        String?
+}
+
+model sectors {
+  id                       String                     @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name                String                     @unique
+  name                     String
+  order                    Int?
+  financial_source_sectors financial_source_sectors[]
+  financial_sources        financial_sources[]
+  supplier_sectors         supplier_sectors[]
+
+  @@id([id, code_name])
+}
+
+model service_desk_topics {
+  id                                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                                String
+  administrative_department_code_name String
+  created_at                          DateTime @default(now()) @db.Timestamptz(6)
+  order                               Int?
+}
+
+model servicios {
+  id      String    @id @db.Uuid
+  name    String?
+  tarifas tarifas[]
+}
+
+model signup_sectors {
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  code_name String
+}
+
+model state_energy_vinculation_types {
+  id        String @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name String @unique
+  name      String
+
+  @@id([id, code_name])
+}
+
+model state_energy_vinculations {
+  id                                      String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                                    String
+  email                                   String
+  phone_number                            String
+  address                                 String?
+  dimensions                              String?
+  folio_ircep                             String?
+  status_code_name                        String          @default("UNAUTHORIZED")
+  rfc                                     String?
+  description                             String?
+  state_energy_vinculation_type_code_name String
+  contact_name                            String?
+  latitude                                Decimal?        @db.Decimal
+  longitude                               Decimal?        @db.Decimal
+  created_by_id                           String?         @db.Uuid
+  created_at                              DateTime?       @default(now()) @db.Timestamp(6)
+  remarks                                 String?
+  reasons                                 String?
+  curp                                    String?
+  document_logs                           document_logs[]
+  status                                  status          @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+}
+
+model states {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  iso_name          String
+  name              String
+  raw               Json?
+  status_code_name  String
+  type              String
+  country_id        String              @db.Uuid
+  code_name         String?             @unique
+  cities            cities[]
+  financial_sources financial_sources[]
+  countries         countries           @relation(fields: [country_id], references: [id], onUpdate: Restrict)
+  status            status              @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+}
+
+model status {
+  id                                                                           String                      @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                                                                         String
+  code_name                                                                    String                      @unique
+  type                                                                         String?
+  parent_id                                                                    String?                     @db.Uuid
+  raw                                                                          Json?
+  status_group_code_name                                                       String
+  parent_code_name                                                             String?
+  created_at                                                                   DateTime                    @default(now()) @db.Timestamp(6)
+  updated_at                                                                   DateTime                    @default(now()) @db.Timestamp(6)
+  deleted_at                                                                   DateTime?                   @db.Timestamp(6)
+  color                                                                        String?
+  color_id                                                                     String?                     @db.Uuid
+  activities                                                                   activities[]
+  document_logs                                                                document_logs[]
+  documents                                                                    documents[]
+  financial_sources                                                            financial_sources[]
+  inbox                                                                        inbox[]
+  indicators                                                                   indicators[]
+  legal_frameworks                                                             legal_frameworks[]
+  modules                                                                      modules[]
+  newsletters                                                                  newsletters[]
+  ordinaries_sessions_ordinaries_sessions_check_date_status_code_nameTostatus  ordinaries_sessions[]       @relation("ordinaries_sessions_check_date_status_code_nameTostatus")
+  ordinaries_sessions_ordinaries_sessions_review_date_status_code_nameTostatus ordinaries_sessions[]       @relation("ordinaries_sessions_review_date_status_code_nameTostatus")
+  ordinaries_sessions_ordinaries_sessions_status_code_nameTostatus             ordinaries_sessions[]       @relation("ordinaries_sessions_status_code_nameTostatus")
+  ordinary_sessions                                                            ordinary_sessions[]
+  people                                                                       people[]
+  people_types                                                                 people_types[]
+  programs                                                                     programs[]
+  programs_lines_action                                                        programs_lines_action[]
+  programs_objectives                                                          programs_objectives[]
+  programs_strategy                                                            programs_strategy[]
+  project_developments                                                         project_developments[]
+  projects                                                                     projects[]
+  projects_main                                                                projects_main[]
+  projects_main_tasks                                                          projects_main_tasks[]
+  reports                                                                      reports[]
+  role_permissions                                                             role_permissions[]
+  roles                                                                        roles[]
+  scheduled_reports                                                            scheduled_reports[]
+  state_energy_vinculations                                                    state_energy_vinculations[]
+  states                                                                       states[]
+  colors                                                                       colors?                     @relation(fields: [color_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  subactivities                                                                subactivities[]
+  suppliers                                                                    suppliers[]
+  task_metric_indicators                                                       task_metric_indicators[]
+  users                                                                        users[]
+
+  @@id([id, code_name])
+}
+
+model subactivities {
+  id                  String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                String
+  activity_code_name  String?
+  subactivity_id      String?         @db.Uuid
+  order               Int
+  source              String?
+  units               String?
+  frequency_code_name String?
+  graphics            String?
+  notes               String?
+  notes_list          Json?           @default("[]")
+  status_code_name    String?         @default("ACTIVE")
+  data_matrix         data_matrix[]
+  activities          activities?     @relation(fields: [activity_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  frequencies         frequencies?    @relation(fields: [frequency_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  status              status?         @relation(fields: [status_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  subactivities       subactivities?  @relation("subactivitiesTosubactivities", fields: [subactivity_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  other_subactivities subactivities[] @relation("subactivitiesTosubactivities")
+}
+
+model supplier_sectors {
+  id               String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  supplier_id      String      @db.Uuid
+  sector_code_name String
+  companies        companies[]
+  sectors          sectors     @relation(fields: [sector_code_name], references: [code_name], onDelete: Cascade)
+  suppliers        suppliers   @relation(fields: [supplier_id], references: [id], onDelete: Cascade)
+}
+
+model suppliers {
+  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name               String
+  contact_name       String
+  email              String
+  phone_number       String
+  rfc                String?
+  sector_code_name   String?
+  status_code_name   String               @default("EN_REVISION")
+  created_at         DateTime             @default(now()) @db.Timestamp(6)
+  created_by_id      String?              @db.Uuid
+  updated_at         DateTime             @default(now()) @db.Timestamp(6)
+  updated_by_id      String?              @db.Uuid
+  rfc_type_code_name String?
+  web_url            String?
+  facebook           String?
+  twitter            String?
+  instagram          String?
+  description        String?
+  company_id         String?              @db.Uuid
+  is_gender_equal    Boolean?             @default(false)
+  is_in_puebla       Boolean?             @default(false)
+  business_name      String?
+  remarks            String?
+  semblance          String?
+  list_of_goods      String?
+  address            String?
+  document_logs      document_logs[]
+  supplier_sectors   supplier_sectors[]
+  companies          companies?           @relation(fields: [company_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  rfc_types          rfc_types?           @relation(fields: [rfc_type_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  status             status               @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+  suppliers_contract suppliers_contract[]
+}
+
+model suppliers_contract {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  supplier_id       String    @db.Uuid
+  contract          String
+  name              String
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime  @default(now()) @db.Timestamptz(6)
+  contract_mimetype String
+  suppliers         suppliers @relation(fields: [supplier_id], references: [id], onDelete: Cascade, onUpdate: Restrict)
+}
+
+model tarifas {
+  id           String         @id(map: "PKtarifas") @db.Uuid
+  name         String?
+  id_servicio  String?        @db.Uuid
+  servicios    servicios?     @relation(fields: [id_servicio], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "servicios_tarifa")
+  total_region total_region[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model task_metric_indicators {
+  id                    String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                  String
+  status_code_name      String
+  topic_code_name       String
+  description           String?
+  institution_code_name String
+  program               String
+  base_line             String
+  goal                  String
+  source                String
+  source_url            String
+  trending              String
+  frequency_code_name   String
+  period                String
+  entity_code_name      String
+  unit                  String
+  indicator_formula     String
+  main_results          String
+  created_at            DateTime                @default(now()) @db.Timestamp(6)
+  created_by_id         String?                 @db.Uuid
+  updated_at            DateTime?               @default(now()) @db.Timestamp(6)
+  updated_by_id         String?                 @db.Uuid
+  first_trimester       Decimal                 @default(0) @db.Decimal
+  second_trimester      Decimal                 @default(0) @db.Decimal
+  third_trimester       Decimal                 @default(0) @db.Decimal
+  fourth_trimester      Decimal                 @default(0) @db.Decimal
+  derived_program_id    String?                 @db.Uuid
+  programs_lines_action programs_lines_action[]
+  programs              programs?               @relation(fields: [derived_program_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  entities              entities                @relation(fields: [entity_code_name], references: [code_name], onUpdate: Restrict)
+  frequencies           frequencies             @relation(fields: [frequency_code_name], references: [code_name], onUpdate: Restrict)
+  institutions          institutions            @relation(fields: [institution_code_name], references: [code_name], onUpdate: Restrict)
+  status                status                  @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+  topics                topics                  @relation(fields: [topic_code_name], references: [code_name], onUpdate: Restrict)
+}
+
+model tasks {
+  id                       String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                     String
+  assigned_to_id           String?            @db.Uuid
+  priority_code_name       String?
+  status_code_name         String?
+  project_workflow_id      String?            @db.Uuid
+  comments                 String?
+  due_date                 DateTime?          @db.Timestamp(6)
+  created_at               DateTime           @default(now()) @db.Timestamp(6)
+  created_by_id            String?            @db.Uuid
+  updated_at               DateTime           @default(now()) @db.Timestamp(6)
+  updated_by_id            String?            @db.Uuid
+  project_id               String             @db.Uuid
+  task_metric_indicator_id String?            @db.Uuid
+  point                    Int?
+  people                   people?            @relation(fields: [assigned_to_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  priorities               priorities?        @relation(fields: [priority_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  projects                 projects           @relation(fields: [project_id], references: [id], onUpdate: Restrict)
+  project_workflows        project_workflows? @relation(fields: [project_workflow_id], references: [id], onDelete: Restrict, onUpdate: Restrict)
+}
+
+model topics {
+  id                     String                   @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code_name              String                   @unique
+  name                   String
+  task_metric_indicators task_metric_indicators[]
+
+  @@id([id, code_name])
+}
+
+model total_region {
+  id                String             @id @db.Uuid
+  id_months         String?            @db.Uuid
+  id_years          String?            @db.Uuid
+  id_region         String?            @db.Uuid
+  id_tarifa         String?            @db.Uuid
+  hora              String?
+  cargo             String?
+  total             Float?             @db.Real
+  unidad            String?
+  months            months?            @relation(fields: [id_months], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  division_regiones division_regiones? @relation(fields: [id_region], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tarifas           tarifas?           @relation(fields: [id_tarifa], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  years             years?             @relation(fields: [id_years], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model user_files {
+  id                                                                                   String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id                                                                              String             @db.Uuid
+  curp                                                                                 String
+  acta_de_nacimiento                                                                   String
+  comprobante_de_domicilio                                                             String
+  curp_mimetype                                                                        String
+  acta_de_nacimiento_mimetype                                                          String?
+  comprobante_de_domicilio_mimetype                                                    String?
+  curp_file_status                                                                     String?            @db.Uuid
+  acta_de_nacimiento_file_status                                                       String?            @db.Uuid
+  comprobante_de_domicilio_file_status                                                 String?            @db.Uuid
+  curp_name_file                                                                       String?
+  acta_de_nacimiento_name_file                                                         String?
+  comprobante_de_domicilio_name_file                                                   String?
+  user_files_status_user_files_acta_de_nacimiento_file_statusTouser_files_status       user_files_status? @relation("user_files_acta_de_nacimiento_file_statusTouser_files_status", fields: [acta_de_nacimiento_file_status], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  user_files_status_user_files_comprobante_de_domicilio_file_statusTouser_files_status user_files_status? @relation("user_files_comprobante_de_domicilio_file_statusTouser_files_status", fields: [comprobante_de_domicilio_file_status], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  user_files_status_user_files_curp_file_statusTouser_files_status                     user_files_status? @relation("user_files_curp_file_statusTouser_files_status", fields: [curp_file_status], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  users                                                                                users              @relation(fields: [user_id], references: [id], onUpdate: Restrict)
+}
+
+model user_files_status {
+  id                                                                            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                                                                          String
+  user_files_user_files_acta_de_nacimiento_file_statusTouser_files_status       user_files[] @relation("user_files_acta_de_nacimiento_file_statusTouser_files_status")
+  user_files_user_files_comprobante_de_domicilio_file_statusTouser_files_status user_files[] @relation("user_files_comprobante_de_domicilio_file_statusTouser_files_status")
+  user_files_user_files_curp_file_statusTouser_files_status                     user_files[] @relation("user_files_curp_file_statusTouser_files_status")
+}
+
+model user_people {
+  id                                                                                  String                             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id                                                                             String                             @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  people_id                                                                           String                             @db.Uuid
+  created_at                                                                          DateTime                           @default(now()) @db.Timestamp(6)
+  updated_at                                                                          DateTime                           @default(now()) @db.Timestamp(6)
+  indicators_trimester_indicators_trimester_first_trimester_responsableTouser_people  indicators_trimester[]             @relation("indicators_trimester_first_trimester_responsableTouser_people")
+  indicators_trimester_indicators_trimester_second_trimester_responsableTouser_people indicators_trimester[]             @relation("indicators_trimester_second_trimester_responsableTouser_people")
+  ordinaries_sessions_ordinaries_sessions_check_user_idTouser_people                  ordinaries_sessions[]              @relation("ordinaries_sessions_check_user_idTouser_people")
+  ordinaries_sessions_ordinaries_sessions_review_user_idTouser_people                 ordinaries_sessions[]              @relation("ordinaries_sessions_review_user_idTouser_people")
+  ordinaries_sessions_participants                                                    ordinaries_sessions_participants[]
+  programs_lines_action_programs_lines_action_assigned_toTouser_people                programs_lines_action[]            @relation("programs_lines_action_assigned_toTouser_people")
+  programs_lines_action_programs_lines_action_registered_byTouser_people              programs_lines_action[]            @relation("programs_lines_action_registered_byTouser_people")
+  programs_strategy_programs_strategy_assigned_toTouser_people                        programs_strategy[]                @relation("programs_strategy_assigned_toTouser_people")
+  programs_strategy_programs_strategy_registered_byTouser_people                      programs_strategy[]                @relation("programs_strategy_registered_byTouser_people")
+  projects_main                                                                       projects_main[]
+  projects_main_responsable                                                           projects_main_responsable[]
+  people                                                                              people                             @relation(fields: [people_id], references: [id], onUpdate: Restrict)
+  users                                                                               users                              @relation(fields: [user_id], references: [id], onUpdate: Restrict)
+}
+
+model users {
+  id                         String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                      String?
+  password                   String?
+  google_id                  String?
+  status_code_name           String
+  created_at                 DateTime                    @default(now()) @db.Timestamp(6)
+  updated_at                 DateTime                    @default(now()) @db.Timestamp(6)
+  role_code_name             String?
+  sector_code_name           String?
+  registered_by              String?                     @db.Uuid
+  approved                   Boolean?                    @default(false)
+  reasons                    String?
+  government_area_id         String?                     @db.Uuid
+  phone                      String?
+  name                       String?
+  company                    String?
+  user_files                 user_files[]
+  user_people                user_people[]
+  administrative_departments administrative_departments? @relation(fields: [government_area_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "users_govermment_area_id_fkey")
+  roles                      roles?                      @relation(fields: [role_code_name], references: [code_name], onDelete: Restrict, onUpdate: Restrict)
+  status                     status                      @relation(fields: [status_code_name], references: [code_name], onUpdate: Restrict)
+}
+
+model visitaSieep {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fecha      DateTime  @db.Date
+  hora       DateTime  @db.Time(6)
+  inicio     DateTime  @db.Date
+  horainicio DateTime  @db.Time(6)
+  fin        DateTime? @db.Date
+  horafin    DateTime? @db.Time(6)
+  ip         String
+  modulo     String
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model visitas {
+  id         Int
+  fecha      DateTime @db.Date
+  hora       DateTime @db.Timetz(6)
+  inicio     DateTime @db.Date
+  horainicio DateTime @db.Timetz(6)
+  fin        DateTime @db.Date
+  horafin    DateTime @db.Timetz(6)
+  ip         String?
+  modulo     String?
+
+  @@ignore
+}
